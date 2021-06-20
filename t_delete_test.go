@@ -1,16 +1,17 @@
 package badger
 
 import (
-	"kv"
 	"os"
 	"testing"
+
+	"github.com/TudorHulban/kv"
 
 	"github.com/TudorHulban/log"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestDelete(t *testing.T) {
-	l := log.New(log.DEBUG, os.Stderr, true)
+	l := log.NewLogger(log.DEBUG, os.Stderr, true)
 
 	inmemStore, err := NewBStoreInMem(l)
 	assert.Nil(t, err)

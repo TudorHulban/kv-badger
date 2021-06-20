@@ -11,12 +11,12 @@ import (
 
 // BStore Concentrates information defining a KV store.
 type BStore struct {
-	logger *log.LogInfo // logger needed only for package logging
+	logger *log.Logger // logger needed only for package logging
 	Store  *badger.DB
 }
 
 // NewBStoreDiskWSyncWrites returns a type containing a store that satisfies store interface.
-func NewBStoreDiskWSyncWrites(dbFilePath string, l *log.LogInfo) (*BStore, error) {
+func NewBStoreDiskWSyncWrites(dbFilePath string, l *log.Logger) (*BStore, error) {
 	db, errOpen := badger.Open(badger.DefaultOptions(dbFilePath))
 	if errOpen != nil {
 		return nil, errors.WithMessage(errOpen, "could not open passed file path in constructor")
@@ -30,7 +30,7 @@ func NewBStoreDiskWSyncWrites(dbFilePath string, l *log.LogInfo) (*BStore, error
 
 // NewBStoreDisk returns a type containing a store that satisfies store interface.
 // No sync writes.
-func NewBStoreDisk(dbFilePath string, l *log.LogInfo) (*BStore, error) {
+func NewBStoreDisk(dbFilePath string, l *log.Logger) (*BStore, error) {
 	db, errOpen := badger.Open(badger.DefaultOptions(dbFilePath).WithSyncWrites(false))
 	if errOpen != nil {
 		return nil, errors.WithMessage(errOpen, "could not open passed file path in constructor")
@@ -43,7 +43,7 @@ func NewBStoreDisk(dbFilePath string, l *log.LogInfo) (*BStore, error) {
 }
 
 // NewBStoreInMem Creates in memory Badger DB.
-func NewBStoreInMem(extLogger *log.LogInfo) (*BStore, error) {
+func NewBStoreInMem(extLogger *log.Logger) (*BStore, error) {
 	db, errOpen := badger.Open(badger.DefaultOptions("").WithInMemory(true))
 	if errOpen != nil {
 		return nil, errors.WithMessage(errOpen, "error when creating in memory store")
