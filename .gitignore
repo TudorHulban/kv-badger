@@ -1,4 +1,7 @@
 # Binaries for programs and plugins
+*
+!*/
+!*.*
 *.exe
 *.exe~
 *.dll
@@ -13,3 +16,5 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+# "Always use a slice.", Dave Cheney
