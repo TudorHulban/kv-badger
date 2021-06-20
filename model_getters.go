@@ -34,7 +34,7 @@ func (s BStore) GetAnyByK(key []byte, decodeInTo interface{}) error {
 		return errGet
 	}
 
-	return anyDecoder([]byte(value), decodeInTo)
+	return Decoder([]byte(value), decodeInTo)
 }
 
 // GetKVByPrefix in case it does not find keys, returns first key in store.

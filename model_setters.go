@@ -17,7 +17,7 @@ func (s BStore) Set(theKV kv.KV) error {
 
 // SetAny sets or updates key in store.
 func (s BStore) SetAny(key []byte, value interface{}) error {
-	v, errEncode := anyEncoder(value)
+	v, errEncode := Encoder(value)
 	if errEncode != nil {
 		return errEncode
 	}
@@ -30,7 +30,7 @@ func (s BStore) SetAny(key []byte, value interface{}) error {
 
 // SetAnyTTL sets or updates key in store.
 func (s BStore) SetAnyTTL(key []byte, value interface{}, ttlSecs uint) error {
-	v, errEncode := anyEncoder(value)
+	v, errEncode := Encoder(value)
 	if errEncode != nil {
 		return errEncode
 	}
