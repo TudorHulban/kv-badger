@@ -19,7 +19,7 @@ type BStore struct {
 func NewBStoreDiskWSyncWrites(dbFilePath string, l *log.Logger) (*BStore, error) {
 	db, errOpen := badger.Open(badger.DefaultOptions(dbFilePath))
 	if errOpen != nil {
-		return nil, errors.WithMessage(errOpen, "could not open passed file path in constructor")
+		return nil, errors.WithMessagef(errOpen, "could not open passed file %s in NewBStoreDiskWSyncWrites", dbFilePath)
 	}
 
 	return &BStore{
@@ -33,7 +33,7 @@ func NewBStoreDiskWSyncWrites(dbFilePath string, l *log.Logger) (*BStore, error)
 func NewBStoreDisk(dbFilePath string, l *log.Logger) (*BStore, error) {
 	db, errOpen := badger.Open(badger.DefaultOptions(dbFilePath).WithSyncWrites(false))
 	if errOpen != nil {
-		return nil, errors.WithMessage(errOpen, "could not open passed file path in constructor")
+		return nil, errors.WithMessagef(errOpen, "could not open passed file %s in NewBStoreDisk", dbFilePath)
 	}
 
 	return &BStore{
@@ -46,7 +46,7 @@ func NewBStoreDisk(dbFilePath string, l *log.Logger) (*BStore, error) {
 func NewBStoreInMem(extLogger *log.Logger) (*BStore, error) {
 	db, errOpen := badger.Open(badger.DefaultOptions("").WithInMemory(true))
 	if errOpen != nil {
-		return nil, errors.WithMessage(errOpen, "error when creating in memory store")
+		return nil, errors.WithMessage(errOpen, "when creating in memory store")
 	}
 
 	return &BStore{
@@ -62,7 +62,7 @@ func NewBStoreInMemNoLogging() (*BStore, error) {
 
 	db, errOpen := badger.Open(options)
 	if errOpen != nil {
-		return nil, errors.WithMessage(errOpen, "error when creating in memory store")
+		return nil, errors.WithMessage(errOpen, "when creating in memory store")
 	}
 
 	return &BStore{
