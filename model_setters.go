@@ -9,9 +9,9 @@ import (
 )
 
 // Set sets or updates key in store.
-func (s BStore) Set(theKV kv.KV) error {
+func (s BStore) Set(kv kv.KV) error {
 	return s.Store.Update(func(txn *badger.Txn) error {
-		return txn.Set(theKV.Key, theKV.Value)
+		return txn.Set(kv.Key, kv.Value)
 	})
 }
 
@@ -42,9 +42,9 @@ func (s BStore) SetAnyTTL(key []byte, value interface{}, ttlSecs uint) error {
 }
 
 // SetTTL can be used for inserts and updates. Time To Live in seconds.
-func (s BStore) SetTTL(theKV kv.KV, ttlSecs uint) error {
+func (s BStore) SetTTL(kv kv.KV, ttlSecs uint) error {
 	return s.Store.Update(func(txn *badger.Txn) error {
-		entry := badger.NewEntry(theKV.Key, theKV.Value).WithTTL(time.Second * time.Duration(ttlSecs))
+		entry := badger.NewEntry(kv.Key, kv.Value).WithTTL(time.Second * time.Duration(ttlSecs))
 		return txn.SetEntry(entry)
 	})
 }

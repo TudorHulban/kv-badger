@@ -37,7 +37,6 @@ func (s BStore) GetAnyByK(key []byte, decodeInTo interface{}) error {
 	return Decoder([]byte(value), decodeInTo)
 }
 
-// GetKVByPrefix in case it does not find keys, returns first key in store.
 func (s BStore) GetKVByPrefix(keyPrefix []byte) ([]kv.KV, error) {
 	var result []kv.KV
 
@@ -55,20 +54,22 @@ func (s BStore) GetKVByPrefix(keyPrefix []byte) ([]kv.KV, error) {
 			k := item.Key()
 
 			errItem = item.Value(func(itemValue []byte) error {
-				s.logger.Debugf("key=%s, value=%s\n", k, itemValue)
+				go s.logger.Debugf("key=%s, value=%s", k, itemValue)
 
 				result = append(result, kv.KV{
-					k,
-					itemValue,
+					Key:   k,
+					Value: itemValue,
 				})
 				return nil
 			})
+
 			// early exit if any error
 			if errItem != nil {
 				return errItem
 			}
 		}
-		return errItem
+
+		return nil
 	})
 
 	return result, errView

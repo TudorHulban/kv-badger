@@ -12,7 +12,7 @@ import (
 )
 
 // Target of test:
-// a. that get by prefix returns correct elements in slice.
+// that get by prefix returns correct elements in result slice.
 func TestGetByPrefix(t *testing.T) {
 	l := log.NewLogger(log.DEBUG, os.Stderr, true)
 

@@ -35,6 +35,6 @@ func TestDelete(t *testing.T) {
 	assert.NoError(t, inMemoryStore.DeleteKVByK(kv.Key))
 
 	v1, errGet := inMemoryStore.GetVByK(kv.Key)
-	assert.NoError(t, errGet)
+	assert.Error(t, errGet)
 	assert.Nil(t, v1)
 }

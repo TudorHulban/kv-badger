@@ -8,13 +8,13 @@ import (
 
 type tstruct struct {
 	F1 int
-	F2 string
+	F2 []byte
 }
 
 func TestGobers(t *testing.T) {
 	v := tstruct{
 		F1: 1,
-		F2: "a",
+		F2: []byte("a"),
 	}
 
 	// testing encoder
