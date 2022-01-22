@@ -19,12 +19,12 @@ func TestGobers(t *testing.T) {
 
 	// testing encoder
 	resEnc, errEncode := Encoder(v)
-	assert.Nil(t, errEncode)
+	assert.NoError(t, errEncode)
 	assert.NotNil(t, resEnc)
 
 	// testing decoder
 	p := new(tstruct)
 	errDecode := Decoder(resEnc, p)
-	assert.Nil(t, errDecode)
+	assert.NoError(t, errDecode)
 	assert.Equal(t, v, *p)
 }

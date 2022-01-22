@@ -17,34 +17,41 @@ func TestGetByPrefix(t *testing.T) {
 	l := log.NewLogger(log.DEBUG, os.Stderr, true)
 
 	inmemStore, err := NewBStoreInMem(l)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	defer func() {
-		assert.Nil(t, inmemStore.Close())
+		assert.NoError(t, inmemStore.Close())
 	}()
 
 	kPrefix := "prefix-"
 
 	// inserting first element.
-	kv1 := kv.KV{[]byte(kPrefix + "x1"), []byte("y1")}
-	errSet := inmemStore.Set(kv1)
-	assert.Nil(t, errSet)
+	kv1 := kv.KV{
+		Key:   []byte(kPrefix + "x1"),
+		Value: []byte("y1"),
+	}
+	assert.NoError(t, inmemStore.Set(kv1))
 
 	var wg sync.WaitGroup
-
 	wg.Add(2)
 
 	go func() {
-		kv2 := kv.KV{[]byte(kPrefix + "x2"), []byte("y2")}
-		errSet := inmemStore.Set(kv2)
-		assert.Nil(t, errSet)
+		kv2 := kv.KV{
+			Key:   []byte(kPrefix + "x2"),
+			Value: []byte("y2"),
+		}
+
+		assert.NoError(t, inmemStore.Set(kv2))
 
 		wg.Done()
 	}()
 
 	go func() {
-		kv3 := kv.KV{[]byte(kPrefix + "x3"), []byte("y3")}
-		errSet := inmemStore.Set(kv3)
-		assert.Nil(t, errSet)
+		kv3 := kv.KV{
+			Key:   []byte(kPrefix + "x3"),
+			Value: []byte("y3"),
+		}
+
+		assert.NoError(t, inmemStore.Set(kv3))
 
 		wg.Done()
 	}()
@@ -52,11 +59,11 @@ func TestGetByPrefix(t *testing.T) {
 	wg.Wait()
 
 	v, errGet := inmemStore.GetKVByPrefix([]byte(kPrefix))
-	assert.Nil(t, errGet)
+	assert.NoError(t, errGet)
 	assert.Equal(t, len(v), 3) // a.
 	assert.Contains(t, v, kv1) // a.
 
 	vBadPrefix, errBadPrefix := inmemStore.GetKVByPrefix([]byte("xxxxxxxxxx"))
-	assert.Nil(t, errBadPrefix)
+	assert.NoError(t, errBadPrefix)
 	assert.Equal(t, 0, len(vBadPrefix)) // a.
 }

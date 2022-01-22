@@ -15,36 +15,41 @@ import (
 func TestSet(t *testing.T) {
 	l := log.NewLogger(log.DEBUG, os.Stderr, true)
 
-	inmemStore, err := NewBStoreInMem(l)
-	assert.Nil(t, err)
+	inMemoryStore, err := NewBStoreInMem(l)
+	assert.NoError(t, err)
 	defer func() {
-		assert.Nil(t, inmemStore.Close())
+		assert.NoError(t, inMemoryStore.Close())
 	}()
 
 	kPrefix := "prefix-"
-	kv := kv.KV{[]byte(kPrefix + "x"), []byte("y")}
+	kv := kv.KV{
+		Key:   []byte(kPrefix + "x"),
+		Value: []byte("y"),
+	}
 
 	// test insert
-	assert.Nil(t, inmemStore.Set(kv))
+	assert.NoError(t, inMemoryStore.Set(kv))
 
 	// test update
 	kv.Value = []byte("z")
-	assert.Nil(t, inmemStore.Set(kv))
+	assert.NoError(t, inMemoryStore.Set(kv))
 
-	v, errGet := inmemStore.GetVByK(kv.Key)
-	assert.Nil(t, errGet)
+	v, errGet := inMemoryStore.GetVByK(kv.Key)
+	assert.NoError(t, errGet)
 	assert.Equal(t, v, []byte(kv.Value))
 }
 
 func TestClose(t *testing.T) {
-	inmemStore, err := NewBStoreInMemNoLogging()
-	assert.Nil(t, err)
-	assert.Nil(t, inmemStore.Close())
+	inMemoryStore, err := NewBStoreInMemNoLogging()
+	assert.NoError(t, err)
+	assert.NoError(t, inMemoryStore.Close())
 
 	// test insert on closed store.
-	kv := kv.KV{[]byte("x"), []byte("y")}
-	errSet := inmemStore.Set(kv)
-	assert.Error(t, errSet)
+	kv := kv.KV{
+		Key:   []byte("x"),
+		Value: []byte("y"),
+	}
+	assert.Error(t, inMemoryStore.Set(kv))
 }
 
 func TestTTL(t *testing.T) {
@@ -57,11 +62,13 @@ func TestTTL(t *testing.T) {
 	}()
 
 	kPrefix := "prefix-"
-	kv := kv.KV{[]byte(kPrefix + "x"), []byte("y")}
+	kv := kv.KV{
+		Key:   []byte(kPrefix + "x"),
+		Value: []byte("y"),
+	}
 	ttlSeconds := 1
 
-	errSet := inmemStore.SetTTL(kv, uint(ttlSeconds))
-	assert.Nil(t, errSet)
+	assert.Nil(t, inmemStore.SetTTL(kv, uint(ttlSeconds)))
 
 	time.Sleep(time.Duration(ttlSeconds+1) * time.Second)
 	_, errGet := inmemStore.GetVByK(kv.Key)
@@ -80,8 +87,8 @@ func BenchmarkSet(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		inmemStore.Set(kv.KV{
-			[]byte(strconv.Itoa(i)),
-			[]byte("x"),
+			Key:   []byte(strconv.Itoa(i)),
+			Value: []byte("x"),
 		})
 	}
 }
